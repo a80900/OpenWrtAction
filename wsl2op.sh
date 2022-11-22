@@ -12,7 +12,7 @@
 
 #--------------------⬇⬇⬇⬇环境变量⬇⬇⬇⬇--------------------
 # 路由默认IP地址
-routeIP=10.10.0.253
+routeIP=192.168.18.2
 # 编译环境中当前账户名字
 userName=$USER
 # 默认OpenWrtAction的Config文件夹中的config文件名
@@ -27,7 +27,7 @@ sysenv=1
 # OpenWrtAction Git URL
 owaUrl=https://github.com/smallprogram/OpenWrtAction.git
 # 是否首次编译 0否，1是
-isFirstCompile=0
+isFirstCompile=1
 # 是否Make Clean & Make DirClean
 isCleanCompile=$2
 # 编译openwrt的log日志文件夹名称
@@ -58,6 +58,7 @@ luci_apps=(
     # https://github.com/lisaac/luci-app-dockerman.git
     # https://github.com/xiaorouji/openwrt-passwall.git
     https://github.com/rufengsuixing/luci-app-adguardhome.git
+    https://github.com/vernesong/OpenClash.git
 )
 # 编译结果变量
 is_complie_error=0
@@ -83,7 +84,7 @@ function Func_DIY_Script(){
     Func_LogMessage "\033[31m 开始执行自定义设置脚本 \033[0m" "\033[31m Start executing the custom setup script \033[0m"
     sleep 1s
     # Modify default IP
-    Func_LogMessage "\033[31m 设置路由默认地址为10.10.0.253 \033[0m" "\033[31m Set the route default address to 10.10.0.253 \033[0m"
+    Func_LogMessage "\033[31m 设置路由默认地址为192.168.18.2 \033[0m" "\033[31m Set the route default address to 192.168.18.2 \033[0m"
     sed -i "s/192.168.1.1/${routeIP}/g" /home/${userName}/${ledeDir}/package/base-files/files/bin/config_generate
     sleep 1s
     # Modify default passwd
@@ -240,16 +241,16 @@ function Func_Compile_Firmware() {
     echo
     cat /home/${userName}/OpenWrtAction/config/${configName} > /home/${userName}/${ledeDir}/.config
     cat /home/${userName}/${ledeDir}/.config > /home/${userName}/${log_folder_name}/${folder_name}/${log_before_defconfig_config}
-    # if [[ $isFirstCompile == 1 ]]; then
-    #     echo -e  "\033[34m 由于你是首次编译，需要make menuconfig配置，如果保持原有config不做更改，请在进入菜单后直接exit即可 \033[0m"
-    #     sleep 6s
-    #     make menuconfig
-    # fi
-    # if [[ $isFirstCompile == 0 ]]; then
-    #     echo -e  "\033[34m 开始执行make defconfig! \033[0m"
-    #     make defconfig | tee -a /home/${userName}/${log_folder_name}/${folder_name}/Func_Main1_make_defconfig-git_log.log
+    if [[ $isFirstCompile == 1 ]]; then
+        echo -e  "\033[34m 由于你是首次编译，需要make menuconfig配置，如果保持原有config不做更改，请在进入菜单后直接exit即可 \033[0m"
+        sleep 6s
+        make menuconfig
+    fi
+    if [[ $isFirstCompile == 0 ]]; then
+        echo -e  "\033[34m 开始执行make defconfig! \033[0m"
+        make defconfig | tee -a /home/${userName}/${log_folder_name}/${folder_name}/Func_Main1_make_defconfig-git_log.log
 
-    # fi
+    fi
 
     Func_LogMessage "\033[34m 开始执行make defconfig! \033[0m" "\033[34m Start to execute make defconfig! \033[0m"
     sleep 1s
