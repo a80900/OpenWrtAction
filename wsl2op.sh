@@ -27,7 +27,7 @@ sysenv=1
 # OpenWrtAction Git URL
 owaUrl=https://github.com/smallprogram/OpenWrtAction.git
 # 是否首次编译 0否，1是
-isFirstCompile=1
+isFirstCompile=0
 # 是否Make Clean & Make DirClean
 isCleanCompile=$2
 # 编译openwrt的log日志文件夹名称
@@ -241,16 +241,17 @@ function Func_Compile_Firmware() {
     echo
     cat /home/${userName}/OpenWrtAction/config/${configName} > /home/${userName}/${ledeDir}/.config
     cat /home/${userName}/${ledeDir}/.config > /home/${userName}/${log_folder_name}/${folder_name}/${log_before_defconfig_config}
-    if [[ $isFirstCompile == 1 ]]; then
-        echo -e  "\033[34m 由于你是首次编译，需要make menuconfig配置，如果保持原有config不做更改，请在进入菜单后直接exit即可 \033[0m"
-        sleep 6s
-        make menuconfig
-    fi
-    if [[ $isFirstCompile == 0 ]]; then
-        echo -e  "\033[34m 开始执行make defconfig! \033[0m"
-        make defconfig | tee -a /home/${userName}/${log_folder_name}/${folder_name}/Func_Main1_make_defconfig-git_log.log
 
-    fi
+    # if [[ $isFirstCompile == 1 ]]; then
+    #     echo -e  "\033[34m 由于你是首次编译，需要make menuconfig配置，如果保持原有config不做更改，请在进入菜单后直接exit即可 \033[0m"
+    #     sleep 6s
+    #     make menuconfig
+    # fi
+    # if [[ $isFirstCompile == 0 ]]; then
+    #     echo -e  "\033[34m 开始执行make defconfig! \033[0m"
+    #     make defconfig | tee -a /home/${userName}/${log_folder_name}/${folder_name}/Func_Main1_make_defconfig-git_log.log
+
+    # fi
 
     Func_LogMessage "\033[34m 开始执行make defconfig! \033[0m" "\033[34m Start to execute make defconfig! \033[0m"
     sleep 1s
